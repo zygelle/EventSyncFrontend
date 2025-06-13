@@ -3,32 +3,37 @@ import { Input } from '../../components/forms/Input';
 import React, { useState } from "react";
 
 import api from "../../services/api/api.tsx";
-import { pathHome } from "../../routers/Paths.tsx";
+import {pathLogin} from "../../routers/Paths.tsx";
 
-export function Login() {
+export function Register() {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
     const navigate = useNavigate();
 
-    async function login(e: React.FormEvent) {
+    async function register(e: React.FormEvent) {
         e.preventDefault();
 
         const data = {
+            name,
             email,
             password,
         }
 
         try {
-            const response = await api.post('api/auth/login', data);
+            const response = await api.post('api/auth/register', data);
 
+            localStorage.setItem('name', name);
             localStorage.setItem('email', email);
+            localStorage.setItem('password', password);
             localStorage.setItem('accessToken', response.data.token);
 
-            navigate(pathHome);
+            alert('Cadastro realizado com sucesso!');
+            navigate(pathLogin);
         } catch (error) {
-            setErrorMessage('Falha no login, tente novamente: ' + error);
+            setErrorMessage('Falha no cadastro, tente novamente: ' + error);
         }
     }
 
@@ -41,7 +46,16 @@ export function Login() {
                 </h1>
             </Link>
 
-            <form onSubmit={login} className="w-full max-w-xl flex flex-col p-8 rounded-lg bg-white shadow-2xl">
+            <form onSubmit={register} className="w-full max-w-xl flex flex-col p-8 rounded-lg bg-white shadow-2xl">
+                <label id="email-label" className="mb-2">Nome</label>
+                <Input
+                aria-labelledby="nome-label"
+                placeholder="Insira seu nome"
+                type="name"
+                value={name}
+                onChange={ (e) => setName(e.target.value) }
+                />
+
                 <label id="email-label" className="mb-2">Email</label>
                 <Input
                 aria-labelledby="email-label"
@@ -64,13 +78,8 @@ export function Login() {
                 <button 
                 type="submit"
                 className="h-9 bg-blue-900 hover:bg-blue-700 rounded border-0 text-lg text-white">
-                    Entrar
+                    Cadastrar
                 </button>
-                <span className="mt-3">Ainda não possui cadastro? 
-                    <Link to="/cadastro" className="text-blue-600 hover:text-blue-800 underline ml-1">
-                    Cadastre-se aqui.
-                    </Link>
-                </span>
             </form>
         </div>
     )

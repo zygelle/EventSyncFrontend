@@ -2,10 +2,12 @@ import {isAuthenticated} from "../services/token.tsx";
 import {createBrowserRouter, Navigate, Outlet, RouterProvider} from "react-router-dom";
 import {
     pathHome,
-    pathLogin
+    pathLogin,
+    pathRegister
 } from "./Paths.tsx";
 import {Login} from "../pages/login/Login.tsx";
 import ErrorPage from "../pages/error/ErrorPage.tsx";
+import { Register } from "../pages/cadastro/Register.tsx";
 
 const ProtectedRoute = () => {
     return isAuthenticated() ? <Outlet /> : <Navigate to={pathLogin} />;
@@ -21,6 +23,11 @@ const router = createBrowserRouter([
     {
         path: pathLogin,
         element: <Login/>,
+        errorElement: <ErrorPage />
+    },
+    {
+        path: pathRegister,
+        element: <Register />,
         errorElement: <ErrorPage />
     },
     {
