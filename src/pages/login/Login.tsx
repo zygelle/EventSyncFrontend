@@ -1,34 +1,33 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from '../../schemas/LoginSchema.tsx';
+import type { LoginFormData } from '../../schemas/LoginSchema.tsx';
 import { Input } from '../../components/forms/Input';
-import React, { useState } from "react";
 
 import api from "../../services/api/api.tsx";
 import { pathHome } from "../../routers/Paths.tsx";
 
 export function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-
     const navigate = useNavigate();
 
-    async function login(e: React.FormEvent) {
-        e.preventDefault();
+    const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+        resolver: zodResolver(loginSchema)
+    });
 
-        const data = {
-            email,
-            password,
-        }
-
+    async function login(data: LoginFormData) {
         try {
             const response = await api.post('api/auth/login', data);
 
-            localStorage.setItem('email', email);
-            localStorage.setItem('accessToken', response.data.token);
-
-            navigate(pathHome);
+            if (response?.data?.token) {
+                localStorage.setItem('email', data.email);
+                localStorage.setItem('accessToken', response.data.token);
+                navigate(pathHome);
+            } else {
+                console.error('Token not found in response:', response);
+            }
         } catch (error) {
-            setErrorMessage('Falha no login, tente novamente: ' + error);
+            console.error('Erro ao fazer login:', error);
         }
     }
 
@@ -41,25 +40,24 @@ export function Login() {
                 </h1>
             </Link>
 
-            <form onSubmit={login} className="w-full max-w-xl flex flex-col p-8 rounded-lg bg-white shadow-2xl">
+            <form onSubmit={handleSubmit(login)} className="w-full max-w-xl flex flex-col p-8 rounded-lg bg-white shadow-2xl">
                 <label id="email-label" className="mb-2">Email</label>
                 <Input
                 aria-labelledby="email-label"
                 placeholder="Insira seu email"
                 type="email"
-                value={email}
-                onChange={ (e) => setEmail(e.target.value) }
+                {...register("email")}
                 />
+                {errors.email && <span className="text-red-600 mb-4">{errors.email.message}</span>}
 
                 <label id="senha" className="mb-2">Senha</label>
                 <Input
                 aria-labelledby="senha"
                 placeholder="Insira sua senha"
                 type="password"
-                value={password}
-                onChange={ (e) => setPassword(e.target.value) }
+                {...register("password")}
                 />
-                {errorMessage && (<span className="text-red-600 mb-4">{errorMessage}</span>)}
+                {errors.password && <span className="text-red-600 mb-4">{errors.password.message}</span>}
 
                 <button 
                 type="submit"
