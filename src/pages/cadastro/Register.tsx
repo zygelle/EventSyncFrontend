@@ -1,39 +1,32 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from '../../components/forms/Input';
-import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema } from '../../schemas/RegisterSchema.tsx';
+import type { RegisterFormData } from '../../schemas/RegisterSchema.tsx';
 
 import api from "../../services/api/api.tsx";
 import {pathLogin} from "../../routers/Paths.tsx";
 
 export function Register() {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-
     const navigate = useNavigate();
 
-    async function register(e: React.FormEvent) {
-        e.preventDefault();
+    const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormData>({
+            resolver: zodResolver(registerSchema)
+        });
 
-        const data = {
-            name,
-            email,
-            password,
-        }
-
+    async function regis(data: RegisterFormData) {
         try {
             const response = await api.post('api/auth/register', data);
 
-            localStorage.setItem('name', name);
-            localStorage.setItem('email', email);
-            localStorage.setItem('password', password);
+            localStorage.setItem('name', data.name);
+            localStorage.setItem('email', data.email);
+            localStorage.setItem('password', data.password);
             localStorage.setItem('accessToken', response.data.token);
-
             alert('Cadastro realizado com sucesso!');
             navigate(pathLogin);
         } catch (error) {
-            setErrorMessage('Falha no cadastro, tente novamente: ' + error);
+            console.error('Erro ao fazer cadastro:', error);
         }
     }
 
@@ -46,34 +39,33 @@ export function Register() {
                 </h1>
             </Link>
 
-            <form onSubmit={register} className="w-full max-w-xl flex flex-col p-8 rounded-lg bg-white shadow-2xl">
-                <label id="email-label" className="mb-2">Nome</label>
+            <form onSubmit={handleSubmit(regis)} className="w-full max-w-xl flex flex-col p-8 rounded-lg bg-white shadow-2xl">
+                <label id="name-label" className="mb-2">Nome</label>
                 <Input
-                aria-labelledby="nome-label"
+                aria-labelledby="name-label"
                 placeholder="Insira seu nome"
                 type="name"
-                value={name}
-                onChange={ (e) => setName(e.target.value) }
+                {...register("name")}
                 />
+                {errors.name && <span className="text-red-600 mb-4">{errors.name.message}</span>}
 
                 <label id="email-label" className="mb-2">Email</label>
                 <Input
                 aria-labelledby="email-label"
                 placeholder="Insira seu email"
                 type="email"
-                value={email}
-                onChange={ (e) => setEmail(e.target.value) }
+                {...register("email")}
                 />
+                {errors.email && <span className="text-red-600 mb-4">{errors.email.message}</span>}
 
                 <label id="senha" className="mb-2">Senha</label>
                 <Input
                 aria-labelledby="senha"
                 placeholder="Insira sua senha"
                 type="password"
-                value={password}
-                onChange={ (e) => setPassword(e.target.value) }
+                {...register("password")}
                 />
-                {errorMessage && (<span className="text-red-600 mb-4">{errorMessage}</span>)}
+                {errors.password && <span className="text-red-600 mb-4">{errors.password.message}</span>}
 
                 <button 
                 type="submit"
