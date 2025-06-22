@@ -6,8 +6,10 @@ import {
     pathRegister
 } from "./Paths.tsx";
 import {Login} from "../pages/login/Login.tsx";
+import Navbar from "../components/Navbar.tsx";
 import ErrorPage from "../pages/error/ErrorPage.tsx";
 import { Register } from "../pages/cadastro/Register.tsx";
+import Event from "../pages/evento/Event.tsx";
 
 const ProtectedRoute = () => {
     return isAuthenticated() ? <Outlet /> : <Navigate to={pathLogin} />;
@@ -15,6 +17,7 @@ const ProtectedRoute = () => {
 
 const Layout = () => (
     <>
+        <Navbar/>
         <Outlet/>
     </>
 )
@@ -38,7 +41,7 @@ const router = createBrowserRouter([
             children:[
                 {
                     path: pathHome,
-                    element: <Login />
+                    element: <Event />
                 },
                 {
                     path: "*",

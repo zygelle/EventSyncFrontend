@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from '../../schemas/LoginSchema.tsx';
 import type { LoginFormData } from '../../schemas/LoginSchema.tsx';
-import { Input } from '../../components/forms/Input';
+import { Input } from '../../components/forms/input/Input.tsx';
 
 import api from "../../services/api/api.tsx";
 import { pathHome } from "../../routers/Paths.tsx";

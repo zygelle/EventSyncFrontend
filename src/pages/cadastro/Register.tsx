@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Input } from '../../components/forms/Input';
+import { Input } from '../../components/forms/input/Input.tsx';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from '../../schemas/RegisterSchema.tsx';
