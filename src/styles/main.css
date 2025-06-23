@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    background-color: #f3f4f6;
+}
+
 .grid-layout{
     width: 100%;
     display: grid;
@@ -18,15 +22,16 @@
 }
 
 main {
-    background-color: white;
+    background-color: #ffffff;
     height: fit-content;
     min-height: 100%;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
     border-radius: 15px;
     padding: 2rem;
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 50px auto;
 
     display: flex;
     flex-direction: column;

@@ -19,13 +19,10 @@ export function Login() {
         try {
             const response = await api.post('api/auth/login', data);
 
-            if (response?.data?.token) {
-                localStorage.setItem('email', data.email);
-                localStorage.setItem('accessToken', response.data.token);
-                navigate(pathHome);
-            } else {
-                console.error('Token not found in response:', response);
-            }
+            localStorage.setItem("email", response.data.email);
+
+            console.log('Login bem-sucedido:', response.data);
+            navigate(pathHome);
         } catch (error) {
             console.error('Erro ao fazer login:', error);
         }
