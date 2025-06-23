@@ -4,8 +4,8 @@ import { type EventDetail, EventDetailSchema } from "../../schemas/EventSchema.t
 import api from "../../services/api/api.tsx";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTag, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { pathHome } from "../../routers/Paths.tsx";
+import { faTag, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { pathHome, setPathEditEvent } from "../../routers/Paths.tsx";
 import { formatDate } from "../../utils/formatDate.tsx";
 
 function ViewEvent() {
@@ -73,6 +73,14 @@ function ViewEvent() {
         }
     }
 
+    function handleEdit() {
+        if (id) {
+            navigate(setPathEditEvent(id));
+        } else {
+            alert("Não foi possível editar o evento: ID não encontrado.");
+        }
+    }
+
     if (loading) {
         return (
             <main className="flex justify-center items-center h-screen">
@@ -114,6 +122,13 @@ function ViewEvent() {
         <main>
             <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto my-8">
                 <div className="flex justify-end mb-3">
+                    <button
+                        onClick={handleEdit}
+                        className="text-blue-600 p-2 rounded-full hover:bg-blue-100 transition-colors duration-200 mr-2" // Added mr-2 for spacing
+                        title="Editar Evento"
+                    >
+                        <FontAwesomeIcon icon={faEdit} size="lg"/>
+                    </button>
                     <button
                         onClick={handleDelete}
                         className="text-red-600 p-2 rounded-full hover:bg-red-100 transition-colors duration-200"

@@ -8,3 +8,7 @@ export const setPathViewEvent = (id: string) => {
     return `/evento/${id}`
 }
 export const pathCreateEvents = '/evento/criar'
+export const pathEditEvents = `/evento/editar/:id`
+export const setPathEditEvent = (id: string) => {
+    return `/evento/editar/${id}`
+}
