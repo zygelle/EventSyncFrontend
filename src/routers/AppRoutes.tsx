@@ -1,11 +1,19 @@
-import {isAuthenticated} from "../services/token.tsx";
+import {isAuthenticated} from "../services/authentication.tsx";
 import {createBrowserRouter, Navigate, Outlet, RouterProvider} from "react-router-dom";
 import {
+    pathCreateEvents,
     pathHome,
-    pathLogin
+    pathLogin,
+    pathRegister,
+    pathViewEvent
 } from "./Paths.tsx";
 import {Login} from "../pages/login/Login.tsx";
+import Navbar from "../components/Navbar.tsx";
 import ErrorPage from "../pages/error/ErrorPage.tsx";
+import { Register } from "../pages/cadastro/Register.tsx";
+import { CreateEvent } from "../pages/evento/CreateEvent.tsx";
+import ViewEvent from "../pages/evento/ViewEvent.tsx";
+import EventList from "../pages/evento/EventList.tsx";
 
 const ProtectedRoute = () => {
     return isAuthenticated() ? <Outlet /> : <Navigate to={pathLogin} />;
@@ -13,6 +21,7 @@ const ProtectedRoute = () => {
 
 const Layout = () => (
     <>
+        <Navbar/>
         <Outlet/>
     </>
 )
@@ -24,6 +33,11 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />
     },
     {
+        path: pathRegister,
+        element: <Register />,
+        errorElement: <ErrorPage />
+    },
+    {
         element: <ProtectedRoute/>,
         errorElement: <Layout />,
         children: [{
@@ -31,7 +45,15 @@ const router = createBrowserRouter([
             children:[
                 {
                     path: pathHome,
-                    element: <Login />
+                    element: <EventList />
+                },
+                {
+                    path: pathCreateEvents,
+                    element: <CreateEvent />
+                },
+                {
+                    path: pathViewEvent,
+                    element: <ViewEvent/>
                 },
                 {
                     path: "*",

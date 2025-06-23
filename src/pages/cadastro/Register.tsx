@@ -1,30 +1,32 @@
 import { Link, useNavigate } from "react-router-dom";
+import { Input } from '../../components/forms/input/Input.tsx';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from '../../schemas/LoginSchema.tsx';
-import type { LoginFormData } from '../../schemas/LoginSchema.tsx';
-import { Input } from '../../components/forms/input/Input.tsx';
+import { registerSchema } from '../../schemas/RegisterSchema.tsx';
+import type { RegisterFormData } from '../../schemas/RegisterSchema.tsx';
 
 import api from "../../services/api/api.tsx";
-import { pathHome } from "../../routers/Paths.tsx";
+import {pathLogin} from "../../routers/Paths.tsx";
 
-export function Login() {
+export function Register() {
     const navigate = useNavigate();
 
-    const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
-        resolver: zodResolver(loginSchema)
-    });
+    const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormData>({
+            resolver: zodResolver(registerSchema)
+        });
 
-    async function login(data: LoginFormData) {
+    async function regis(data: RegisterFormData) {
         try {
-            const response = await api.post('api/auth/login', data);
+            const response = await api.post('api/auth/register', data);
 
-            localStorage.setItem("email", response.data.email);
-
-            console.log('Login bem-sucedido:', response.data);
-            navigate(pathHome);
+            localStorage.setItem('name', data.name);
+            localStorage.setItem('email', data.email);
+            localStorage.setItem('password', data.password);
+            localStorage.setItem('accessToken', response.data.token);
+            alert('Cadastro realizado com sucesso!');
+            navigate(pathLogin);
         } catch (error) {
-            console.error('Erro ao fazer login:', error);
+            console.error('Erro ao fazer cadastro:', error);
         }
     }
 
@@ -37,7 +39,16 @@ export function Login() {
                 </h1>
             </Link>
 
-            <form onSubmit={handleSubmit(login)} className="w-full max-w-xl flex flex-col p-8 rounded-lg bg-white shadow-2xl">
+            <form onSubmit={handleSubmit(regis)} className="w-full max-w-xl flex flex-col p-8 rounded-lg bg-white shadow-2xl">
+                <label id="name-label" className="mb-2">Nome</label>
+                <Input
+                aria-labelledby="name-label"
+                placeholder="Insira seu nome"
+                type="name"
+                {...register("name")}
+                />
+                {errors.name && <span className="text-red-600 mb-4">{errors.name.message}</span>}
+
                 <label id="email-label" className="mb-2">Email</label>
                 <Input
                 aria-labelledby="email-label"
@@ -59,13 +70,8 @@ export function Login() {
                 <button 
                 type="submit"
                 className="h-9 bg-blue-900 hover:bg-blue-700 rounded border-0 text-lg text-white">
-                    Entrar
+                    Cadastrar
                 </button>
-                <span className="mt-3">Ainda não possui cadastro? 
-                    <Link to="/cadastro" className="text-blue-600 hover:text-blue-800 underline ml-1">
-                    Cadastre-se aqui.
-                    </Link>
-                </span>
             </form>
         </div>
     )

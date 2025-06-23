@@ -1,25 +1,12 @@
 import axios from "axios"
-import {getToken, logout} from "../token.tsx";
+import {logout} from "../authentication.tsx";
 import {pathLogin} from "../../routers/Paths.tsx";
 
 
 const api = axios.create({
     baseURL: 'http://localhost:8080',
+    withCredentials: true,
 });
-
-api.interceptors.request.use(
-    (config) => {
-        const token = getToken();
-        if (token) {
-            config.headers["Authorization"] = `Bearer ${token}`;
-        }
-
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
 
 api.interceptors.response.use(
     (response) => response,
