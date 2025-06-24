@@ -4,8 +4,8 @@ import { type EventDetail, EventDetailSchema } from "../../schemas/EventSchema.t
 import api from "../../services/api/api.tsx";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTag, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { pathHome } from "../../routers/Paths.tsx";
+import { faTag, faTrash, faEdit, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { pathHome, setPathEditEvent } from "../../routers/Paths.tsx";
 import { formatDate } from "../../utils/formatDate.tsx";
 
 function ViewEvent() {
@@ -14,6 +14,8 @@ function ViewEvent() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const [isCheckedIn, setIsCheckedIn] = useState<boolean>(false);
+    const [checkingIn, setCheckingIn] = useState<boolean>(false);
 
     useEffect(() => {
         async function fetchEvent() {
@@ -22,15 +24,20 @@ function ViewEvent() {
                 setLoading(false);
                 return;
             }
-            try {
-                const response = await api.get(`/api/events/${id}`);
-                const result = EventDetailSchema.safeParse(response.data);
 
-                if (result.success) {
-                    setEvent(result.data);
+            setLoading(true);
+            setError(null);
+            try {
+                const eventResponse = await api.get(`/api/events/${id}`);
+                const eventResult = EventDetailSchema.safeParse(eventResponse.data);
+
+                if (eventResult.success) {
+                    setEvent(eventResult.data);
                 } else {
-                    console.error("Erro de validação do evento:", result.error);
+                    console.error("Erro de validação do evento:", eventResult.error);
                     setError("Dados do evento inválidos.");
+                    setLoading(false);
+                    return;
                 }
             } catch (err) {
                 console.error("Erro ao carregar o evento:", err);
@@ -39,7 +46,6 @@ function ViewEvent() {
                 setLoading(false);
             }
         }
-
         fetchEvent();
     }, [id]);
 
@@ -70,6 +76,46 @@ function ViewEvent() {
                     alert("Erro ao deletar o evento. Por favor, tente novamente.");
                 }
             }
+        }
+    }
+
+    function handleEdit() {
+        if (id) {
+            navigate(setPathEditEvent(id));
+        } else {
+            alert("Não foi possível editar o evento: ID não encontrado.");
+        }
+    }
+
+    async function handleCheckIn() {
+        if (!id) {
+            alert("Não foi possível marcar presença: ID do evento não encontrado.");
+            return;
+        }
+
+        setCheckingIn(true);
+        try {
+            const response = await api.post(`/api/events/${id}/checkin`);
+            if (response.status === 204 || response.status === 200) {
+                setIsCheckedIn(true);
+                alert("Presença marcada com sucesso!");
+            } else {
+                alert(`Erro ao marcar presença: Status ${response.status}`);
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                if (error.response.status === 403 || error.response.status === 400) {
+                    alert("Você não tem permissão para marcar presença neste evento.");
+                } else if (error.response.status === 404) {
+                    alert("Evento não encontrado para marcar presença.");
+                } else if (error.response.status === 409) {
+                    alert("Você já marcou presença neste evento.");
+                }
+            } else {
+                alert("Erro ao marcar presença. Por favor, tente novamente.");
+            }
+        } finally {
+            setCheckingIn(false);
         }
     }
 
@@ -110,10 +156,21 @@ function ViewEvent() {
         );
     }
 
+    const checkInButtonClass = isCheckedIn
+        ? "bg-green-600 hover:bg-green-700 text-white cursor-not-allowed"
+        : "bg-blue-600 hover:bg-blue-700 text-white";
+
     return (
         <main>
             <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto my-8">
                 <div className="flex justify-end mb-3">
+                    <button
+                        onClick={handleEdit}
+                        className="text-blue-600 p-2 rounded-full hover:bg-blue-100 transition-colors duration-200 mr-2" // Added mr-2 for spacing
+                        title="Editar Evento"
+                    >
+                        <FontAwesomeIcon icon={faEdit} size="lg"/>
+                    </button>
                     <button
                         onClick={handleDelete}
                         className="text-red-600 p-2 rounded-full hover:bg-red-100 transition-colors duration-200"
@@ -140,7 +197,15 @@ function ViewEvent() {
                     </div>
                 )}
 
-                <div className="text-center mt-6">
+                <div className="text-center mt-6 flex justify-center gap-4">
+                    <button
+                        onClick={handleCheckIn}
+                        disabled={checkingIn || isCheckedIn}
+                        className={`px-6 py-2 rounded transition-colors duration-200 ${checkInButtonClass}`}
+                    >
+                        <FontAwesomeIcon icon={faCheckCircle} className="mr-2" />
+                        {checkingIn ? "Marcando..." : (isCheckedIn ? "Presença Confirmada" : "Marcar Presença")}
+                    </button>
                     <button
                         onClick={() => navigate(pathHome)}
                         className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
