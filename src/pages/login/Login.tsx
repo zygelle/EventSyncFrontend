@@ -66,6 +66,11 @@ export function Login() {
                     Cadastre-se aqui.
                     </Link>
                 </span>
+                <span className="mt-3">Quer ver os eventos disponíveis?
+                    <Link to="/eventos" className="text-blue-600 hover:text-blue-800 underline ml-1">
+                    Veja aqui.
+                    </Link>
+                </span>
             </form>
         </div>
     )

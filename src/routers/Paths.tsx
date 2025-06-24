@@ -2,6 +2,7 @@
 export const pathLogin = '/login'
 export const pathRegister = '/cadastro'
 export const pathHome = '/'
+export const pathEvents = '/eventos'
 export const pathFilterEvent = '/evento/buscar'
 export const pathViewEvent = `/evento/:id`
 export const setPathViewEvent = (id: string) => {

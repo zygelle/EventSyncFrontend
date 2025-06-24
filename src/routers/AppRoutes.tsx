@@ -7,7 +7,8 @@ import {
     pathRegister,
     pathViewEvent,
     pathEditEvents,
-    pathCheckIn
+    pathCheckIn,
+    pathEvents
 } from "./Paths.tsx";
 import {Login} from "../pages/login/Login.tsx";
 import Navbar from "../components/Navbar.tsx";
@@ -16,6 +17,7 @@ import { Register } from "../pages/cadastro/Register.tsx";
 import { CreateEvent } from "../pages/evento/CreateEvent.tsx";
 import ViewEvent from "../pages/evento/ViewEvent.tsx";
 import EventList from "../pages/evento/EventList.tsx";
+import EventListNoAuth from "../pages/evento/EventListNoAuth.tsx";
 import { EditEvent } from "../pages/evento/EditEvent.tsx";
 import CheckIn from "../pages/evento/CheckIn.tsx";
 
@@ -40,6 +42,10 @@ const router = createBrowserRouter([
         path: pathRegister,
         element: <Register />,
         errorElement: <ErrorPage />
+    },
+    {
+        path: pathEvents,
+        element: <EventListNoAuth />
     },
     {
         element: <ProtectedRoute/>,
