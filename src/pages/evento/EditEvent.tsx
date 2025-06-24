@@ -9,6 +9,7 @@ import { type createEvent, createEventSchema } from "../../schemas/CreateEventSc
 import { loadCategories } from "../../utils/loadCategories.tsx";
 import Select from "react-select";
 import { formatDateISO } from "../../utils/formatDateSimple.tsx";
+import axios from "axios";
 
 export function EditEvent() {
     const { id } = useParams<{ id: string }>();

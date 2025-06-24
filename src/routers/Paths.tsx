@@ -12,3 +12,4 @@ export const pathEditEvents = `/evento/editar/:id`
 export const setPathEditEvent = (id: string) => {
     return `/evento/editar/${id}`
 }
+export const pathCheckIn = '/evento/minha-agenda'

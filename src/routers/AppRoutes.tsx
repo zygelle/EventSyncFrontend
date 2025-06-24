@@ -6,7 +6,8 @@ import {
     pathLogin,
     pathRegister,
     pathViewEvent,
-    pathEditEvents
+    pathEditEvents,
+    pathCheckIn
 } from "./Paths.tsx";
 import {Login} from "../pages/login/Login.tsx";
 import Navbar from "../components/Navbar.tsx";
@@ -16,6 +17,7 @@ import { CreateEvent } from "../pages/evento/CreateEvent.tsx";
 import ViewEvent from "../pages/evento/ViewEvent.tsx";
 import EventList from "../pages/evento/EventList.tsx";
 import { EditEvent } from "../pages/evento/EditEvent.tsx";
+import CheckIn from "../pages/evento/CheckIn.tsx";
 
 const ProtectedRoute = () => {
     return isAuthenticated() ? <Outlet /> : <Navigate to={pathLogin} />;
@@ -52,6 +54,10 @@ const router = createBrowserRouter([
                 {
                     path: pathCreateEvents,
                     element: <CreateEvent />
+                },
+                {
+                    path: pathCheckIn,
+                    element: <CheckIn />
                 },
                 {
                     path: pathEditEvents,

@@ -2,7 +2,7 @@ import {Link, NavLink} from "react-router-dom";
 import React from "react";
 import {
     pathCreateEvents,
-    pathHome, pathLogin,
+    pathHome, pathLogin, pathCheckIn
 } from "../routers/Paths.tsx";
 import {logout} from "../services/authentication.tsx";
 
@@ -37,6 +37,7 @@ function Navbar() {
 
     const navigationItems = [
         { label: 'Criar evento', path: pathCreateEvents },
+        { label: 'Minha agenda', path: pathCheckIn },
         { label: 'Sair', path: pathLogin }
     ];
 
