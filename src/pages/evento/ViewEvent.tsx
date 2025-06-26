@@ -216,7 +216,7 @@ function ViewEvent() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <p className="text-gray-700">
-                            <strong className="text-gray-800">Horário de Início:</strong> {formatTime(event.startTime)}
+                            <strong className="text-gray-800">Horário de Início:</strong> {formatTime(event.startTime || "00:00")}
                         </p>
                     </div>
                     <div>
