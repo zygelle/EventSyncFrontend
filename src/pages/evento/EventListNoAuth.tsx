@@ -1,16 +1,13 @@
-import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { type EventSummary, CollectionModelSchema } from "../../schemas/EventSchema.tsx";
 import EventCardsOptional from "../../components/cards/EventCards.tsx";
 import api from "../../services/api/api.tsx";
-import { pathLogin } from "../../routers/Paths.tsx";
 
 const EventListNoAuth: React.FC = () => {
     const [events, setEvents] = useState<EventSummary[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const topRef = useRef<HTMLDivElement>(null);
-    const navigate = useNavigate();
 
     const loadEvents = async () => {
         setLoading(true);
@@ -38,39 +35,32 @@ const EventListNoAuth: React.FC = () => {
     }, []);
 
     return (
-        <div className="container">
-            <button
-                onClick={() => navigate(pathLogin)}
-                className="fixed top-4 left-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Voltar
-            </button>
-            <main>
-                <div className="flex justify-between mb-4">
-                    <h1 ref={topRef} className="text-3xl font-semibold text-gray-900">Eventos</h1>
-                </div>
+        <main>
+            <div className="flex justify-between mb-4">
+                <h1 ref={topRef} className="text-3xl font-semibold text-gray-900">Eventos</h1>
+            </div>
 
-                {loading ? (
-                    <div className="flex justify-center items-center h-48">
-                        <div className="border-4 border-t-4 border-gray-200 border-solid w-12 h-12 rounded-full animate-spin"></div>
-                        <p className="ml-4 text-gray-700">Carregando eventos...</p>
-                    </div>
-                ) : error ? (
-                    <div className="flex justify-center items-center mt-8">
-                        <p className="text-red-600 text-lg">{error}</p>
-                    </div>
-                ) : events.length > 0 ? (
-                    <div className="flex flex-wrap justify-center items-center gap-4 mt-8">
-                        {events.map((event) => (
-                            <EventCardsOptional key={event.id} event={event} />
-                        ))}
-                    </div>
-                ) : (
-                    <div className="flex justify-center items-center mt-24">
-                        <p className="text-gray-500 text-lg">Nenhum evento encontrado no momento!</p>
-                    </div>
-                )}
-            </main>
-        </div>
+            {loading ? (
+                <div className="flex justify-center items-center h-48">
+                    <div className="border-4 border-t-4 border-gray-200 border-solid w-12 h-12 rounded-full animate-spin"></div>
+                    <p className="ml-4 text-gray-700">Carregando eventos...</p>
+                </div>
+            ) : error ? (
+                <div className="flex justify-center items-center mt-8">
+                    <p className="text-red-600 text-lg">{error}</p>
+                </div>
+            ) : events.length > 0 ? (
+                <div className="flex flex-wrap justify-center items-center gap-4 mt-8">
+                    {events.map((event) => (
+                        <EventCardsOptional key={event.id} event={event} />
+                    ))}
+                </div>
+            ) : (
+                <div className="flex justify-center items-center mt-24">
+                    <p className="text-gray-500 text-lg">Nenhum evento encontrado no momento!</p>
+                </div>
+            )}
+        </main>
     );
 }
 
