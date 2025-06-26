@@ -4,7 +4,7 @@ import {
     pathCreateEvents,
     pathHome, pathLogin, pathCheckIn
 } from "../routers/Paths.tsx";
-import {logout} from "../services/authentication.tsx";
+import {isAuthenticated, logout} from "../services/authentication.tsx";
 
 interface NavigationItemProps {
     label: string;
@@ -50,6 +50,7 @@ function Navbar() {
                     </h1>
                 </Link>
             </div>
+            {isAuthenticated() && (
             <ul className="flex flex-wrap gap-6 sm:gap-8 sm:flex-row">
                 {navigationItems.map((item, index) => (
                     <NavigationItem
@@ -60,6 +61,7 @@ function Navbar() {
                     />
                 ))}
             </ul>
+            )}
         </nav>
     );
 }

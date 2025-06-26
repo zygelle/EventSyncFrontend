@@ -33,6 +33,29 @@ export const EventSummarySchema = z.object({
 
 export type EventSummary = z.infer<typeof EventSummarySchema>;
 
+export const HATEOASSchema = z.object({
+    self: z.object({
+        href: z.string()
+    }).optional(),
+    "all-events": z.object({
+        href: z.string()
+    }).optional(),
+    update: z.object({
+        href: z.string()
+    }).optional(),
+    "uncheck-in": z.object({
+        href: z.string()
+    }).optional(),
+    "check-in": z.object({
+        href: z.string()
+    }).optional(),
+    delete: z.object({
+        href: z.string()
+    }).optional()
+});
+
+export type HATEOAS = z.infer<typeof HATEOASSchema>;
+
 export const EventDetailSchema = z.object({
     id: z.string().uuid("ID do evento inválido."),
     name: z.string().min(1, "O nome não pode estar em branco."),
@@ -55,14 +78,19 @@ export const EventDetailSchema = z.object({
     category: CategorySchema.nullable(),
     organizer: OrganizerSchema,
     userIsCheckedIn: z.boolean().optional(),
+    _links: HATEOASSchema
 });
 
 export type EventDetail = z.infer<typeof EventDetailSchema>;
 
 export const CollectionModelSchema = z.object({
     _embedded: z.object({
-        eventSummaryResponseDTOList: z.array(EventSummarySchema),
+        eventSummaryResponseDTOList: z.array(EventSummarySchema)
     }).optional(),
-    _links: z.any().optional(),
-    page: z.any().optional(),
+    _links: z.object({
+        self: z.object({
+            href: z.string()
+        }).optional()
+    }).optional()
 });
+
