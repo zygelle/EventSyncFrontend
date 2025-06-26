@@ -16,7 +16,7 @@ export const CategorySchema = z.object({
 export type Category = z.infer<typeof CategorySchema>;
 
 export const OrganizerSchema = z.object({
-    id: z.string().uuid("ID do organizador inválido."),
+    email: z.string(),
     name: z.string(),
 });
 
@@ -54,6 +54,7 @@ export const EventDetailSchema = z.object({
     onlineUrl: z.string().url("URL online inválida.").or(z.literal('')).nullable(),
     category: CategorySchema.nullable(),
     organizer: OrganizerSchema,
+    userIsCheckedIn: z.boolean().optional(),
 });
 
 export type EventDetail = z.infer<typeof EventDetailSchema>;

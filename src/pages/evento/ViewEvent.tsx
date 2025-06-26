@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTag, faTrash, faEdit, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { pathHome, setPathEditEvent } from "../../routers/Paths.tsx";
 import { formatDate } from "../../utils/formatDate.tsx";
+import { getEmail } from "../../services/authentication.tsx";
 
 function ViewEvent() {
     const { id } = useParams();
@@ -156,14 +157,15 @@ function ViewEvent() {
         );
     }
 
-    const checkInButtonClass = isCheckedIn
+    const checkInButtonClass = event.userIsCheckedIn || isCheckedIn
         ? "bg-green-600 hover:bg-green-700 text-white cursor-not-allowed"
         : "bg-blue-600 hover:bg-blue-700 text-white";
 
     return (
         <main>
             <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto my-8">
-                <div className="flex justify-end mb-3">
+                {getEmail() === event.organizer.email && (
+                    <div className="flex justify-end mb-3">
                     <button
                         onClick={handleEdit}
                         className="text-blue-600 p-2 rounded-full hover:bg-blue-100 transition-colors duration-200 mr-2" // Added mr-2 for spacing
@@ -179,6 +181,7 @@ function ViewEvent() {
                         <FontAwesomeIcon icon={faTrash} size="lg"/>
                     </button>
                 </div>
+                )}
                 <h1 className="text-3xl font-bold text-gray-900 mb-4">{event.name}</h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -187,6 +190,12 @@ function ViewEvent() {
                             <strong className="text-gray-800">Data:</strong> {formatDate(event.date || "")}
                         </p>
                     </div>
+                </div>
+
+                <div className="mb-4">
+                    <p className="text-gray-700">
+                        <strong className="text-gray-800">Organizador:</strong> {event.organizer.name}
+                    </p>
                 </div>
 
                 {event.category && (
@@ -204,7 +213,7 @@ function ViewEvent() {
                         className={`px-6 py-2 rounded transition-colors duration-200 ${checkInButtonClass}`}
                     >
                         <FontAwesomeIcon icon={faCheckCircle} className="mr-2" />
-                        {checkingIn ? "Marcando..." : (isCheckedIn ? "Presença Confirmada" : "Marcar Presença")}
+                        {checkingIn ? "Marcando..." : (event.userIsCheckedIn || isCheckedIn ? "Presença Confirmada" : "Marcar Presença")}
                     </button>
                     <button
                         onClick={() => navigate(pathHome)}
