@@ -16,6 +16,7 @@ import ErrorPage from "../pages/error/ErrorPage.tsx";
 import { Register } from "../pages/cadastro/Register.tsx";
 import { CreateEvent } from "../pages/evento/CreateEvent.tsx";
 import ViewEvent from "../pages/evento/ViewEvent.tsx";
+import ViewEventNoAuth from "../pages/evento/ViewEventNoAuth.tsx";
 import EventList from "../pages/evento/EventList.tsx";
 import EventListNoAuth from "../pages/evento/EventListNoAuth.tsx";
 import { EditEvent } from "../pages/evento/EditEvent.tsx";
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
     {
         path: pathEvents,
         element: <EventListNoAuth />
+    },
+    {
+        path: pathViewEvent,
+        element: <ViewEventNoAuth />,
     },
     {
         element: <ProtectedRoute/>,
