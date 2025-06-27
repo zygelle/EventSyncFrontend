@@ -34,7 +34,6 @@ function ViewEvent() {
                 if (eventResult.success) {
                     setEvent(eventResult.data);
                     setCheckInButtonClass(eventResult.data.userIsCheckedIn || false);
-                    console.log(eventResult.data);
                 } else {
                     console.error("Erro de validação do evento:", eventResult.error);
                     setError("Dados do evento inválidos.");
@@ -245,6 +244,7 @@ function ViewEvent() {
                 )}
 
                 <div className="text-center mt-6 flex justify-center gap-4">
+                    {isAuthenticated() && (
                     <button
                         onClick={handleCheckIn}
                         className={`px-6 py-2 rounded transition-colors duration-200 ${checkInButtonClass ? "bg-red-600 hover:bg-red-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
@@ -252,6 +252,7 @@ function ViewEvent() {
                         <FontAwesomeIcon icon={faCheckCircle} className="mr-2" />
                         {checkInButtonClass ? <span>Desmarcar Presença</span> : <span>Marcar presença</span>}
                     </button>
+                    )}
                     <button
                         onClick={() => isAuthenticated() ? navigate(pathHome) : navigate(pathEvents)}
                         className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
