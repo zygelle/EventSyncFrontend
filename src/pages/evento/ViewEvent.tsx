@@ -220,12 +220,22 @@ function ViewEvent() {
                     </div>
                     <div>
                         <p className="text-gray-700">
-                            <strong className="text-gray-800">Localização:</strong> {event.location || "Não informado"}
+                            <strong className="text-gray-800">Horário de Término:</strong> {formatTime(event.endTime || "00:00")}
                         </p>
                     </div>
                     <div>
                         <p className="text-gray-700">
                             <strong className="text-gray-800">Descrição:</strong> {event.description || "Não informado"}
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-gray-700">
+                            <strong className="text-gray-800">Localização:</strong> {event.location || "Não informado"}
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-gray-700">
+                            <strong className="text-gray-800">Site para compra:</strong> {event.ticketUrl || "Não informado"}
                         </p>
                     </div>
                     <div className="mb-4">

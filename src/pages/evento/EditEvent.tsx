@@ -8,8 +8,6 @@ import { useForm } from "react-hook-form";
 import { type createEvent, createEventSchema } from "../../schemas/CreateEventSchema.tsx";
 import { loadCategories } from "../../utils/loadCategories.tsx";
 import Select from "react-select";
-import { formatDateISO } from "../../utils/formatDateSimple.tsx";
-import axios from "axios";
 
 export function EditEvent() {
     const { id } = useParams<{ id: string }>();
@@ -69,7 +67,7 @@ export function EditEvent() {
                         name: eventData.name,
                         description: eventData.description,
                         location: eventData.location || "",
-                        date: eventData.date ? formatDateISO(eventData.date) : "",
+                        date: eventData.date ? eventData.date : "",
                         startTime: eventData.startTime ? eventData.startTime.substring(0, 5) : "",
                         endTime: eventData.endTime ? eventData.endTime.substring(0, 5) : "",
                         eventType: eventData.eventType,
